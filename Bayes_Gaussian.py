@@ -1,10 +1,8 @@
 import numpy as np
-from scipy.stats import t
 import math
 from random import random
 import matplotlib.pyplot as plt 
-from math import gamma
-import numpy.linalg as LA
+
 
 
 def p(x, mu, Lambda, nu, D):
@@ -14,19 +12,20 @@ def sample_t(N, mu_s, Lambda_s, nu_s, D):
     sample = []
     while len(sample) != N:
         while True:
-            z = np.array([np.random.uniform(-1, 1), np.random.uniform(-1, 1)])
+            # 規格化定数がわからないので棄却サンプリング
+            z = np.array([np.random.uniform(-1, 1), np.random.uniform(-1, 1)]) * 2
             if p(z, mu_s, Lambda_s, nu_s, D) > random():
                 sample.append(z)
                 break
     return sample
 
 def main():
-    #データ数
+    #　学習データ数
     N = 10000
     # 次元数
     D = 2
     # ハイパーパラメータ
-    _beta = 100
+    _beta = 0.1
     _m = np.random.rand(D)
     _nu = 100
     A = np.random.rand(D, D)
