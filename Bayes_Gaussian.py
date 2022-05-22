@@ -12,7 +12,7 @@ def sample_t(N, mu_s, Lambda_s, nu_s, D):
     sample = []
     while len(sample) != N:
         while True:
-            # 規格化定数がわからないので棄却サンプリング
+            # 規格化定数がわからないkので棄却サンプリング
             z = np.array([np.random.uniform(-1, 1), np.random.uniform(-1, 1)]) * 2
             if p(z, mu_s, Lambda_s, nu_s, D) > random():
                 sample.append(z)
