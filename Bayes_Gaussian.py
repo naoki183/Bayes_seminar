@@ -47,11 +47,9 @@ def main():
     nu_s = 1 + nu_ - D
     X_test = np.random.rand(1000, D)
     X_pred = sample_t(1000, mu_s, Lambda_s, nu_s, D)
-    X_pred1 = multivariate_t(mu_s, np.linalg.inv(W_), df=nu_s, shape=[1000, 1])
     for i in range(1000):
         plt.scatter(X_test[i][0], X_test[i][1], c="red")
         plt.scatter(X_pred[i][0], X_pred[i][1], c="blue")
-        plt.scatter(X_pred1[i][0], X_pred[i][1], c="green")
     plt.title("uniform_distribution")
     plt.show()
 
