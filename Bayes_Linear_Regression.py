@@ -1,4 +1,3 @@
-
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -26,8 +25,8 @@ def plot_pred_function(_Lambda, _m, _lambda, M, N, base_function_type, x, y):
         X[i, :] = base_function(x[i], M, base_function_type)
     s = np.zeros((M, M))
     for i in range(N):
-        s += X[i:i+1, :].T @ X[i:i+1, :]
-    
+        s += X[i:i+1, :].reshape([1, M]).T @ X[i:i+1, :].reshape([1, M])
+
 
     Lambda_ = _lambda * s + _Lambda
     t = np.zeros(M)
@@ -43,15 +42,15 @@ def plot_pred_function(_Lambda, _m, _lambda, M, N, base_function_type, x, y):
         pred_y_mu[i] = m_.T @ base_function(test_x[i], M, base_function_type)
         pred_y_sigma[i] = 1 / np.sqrt(1 / _lambda + base_function(test_x[i], M, base_function_type).T @ (np.linalg.inv(Lambda_) @ base_function(test_x[i], M, base_function_type)))
 
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111)
-    # ax.set_title(f"{M}dimension")
-    # ax.plot(test_x, test_y, linestyle="solid", label="true function", color="red")
-    # ax.plot(test_x, pred_y_mu, linestyle="solid", color="blue")
-    # ax.plot(test_x, pred_y_mu - pred_y_sigma, linestyle="dashed", color="blue")
-    # ax.plot(test_x, pred_y_mu + pred_y_sigma, linestyle="dashed", color="blue")
-    # ax.legend()
-    # plt.show()
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_title(f"{M}dimension")
+    ax.plot(test_x, test_y, linestyle="solid", label="true function", color="red")
+    ax.plot(test_x, pred_y_mu, linestyle="solid", color="blue")
+    ax.plot(test_x, pred_y_mu - pred_y_sigma, linestyle="dashed", color="blue")
+    ax.plot(test_x, pred_y_mu + pred_y_sigma, linestyle="dashed", color="blue")
+    ax.legend()
+    plt.show()
     return [_m, _Lambda, m_, Lambda_, _lambda, y]
 
 def calc_marginal_likelihood(_m, _Lambda, m_, Lambda_, _lambda, y):
@@ -83,7 +82,7 @@ def main():
     x, y = gen_dataset(N, regression_function_type)
     l_list = []
     error_list = []
-    for i in range(2, 20, 1):
+    for i in range(2, 11, 1):
         # ハイパーパラメータ(_Lambda, _mの引数の項数とMが一致していないとエラー出るので注意)
         _Lambda = np.linalg.inv(np.cov(np.random.rand(i, 100)))
         _m = np.random.rand(i)
@@ -99,22 +98,22 @@ def main():
         l_list.append(-l)
         error_list.append(error * 10)
     error1_list = []
-    for j in range(2, 20, 1):
-        M = j
-        base_function_type = "polynomial"
-        x, y = gen_dataset(N, regression_function_type)
-        X = np.zeros((N, M))
-        for i in range(N):
-            X[i, :] = base_function(x[i], M, base_function_type)
+    # for j in range(2, 11, 1):
+    #     M = j
+    #     base_function_type = "polynomial"
+    #     x, y = gen_dataset(N, regression_function_type)
+    #     X = np.zeros((N, M))
+    #     for i in range(N):
+    #         X[i, :] = base_function(x[i], M, base_function_type)
     
-        theta = (np.linalg.inv(X.T @ X) @ X.T) @ y
-        x_test, y_test = gen_dataset(100000, regression_function_type)
-        error1 = 0
-        for i in range(100000):
-            y_pred = theta.T @ base_function(x_test[i], M, base_function_type)
-            error1 += (y_test[i] - y_pred) ** 2
-        error1 /= 100000
-        error1_list.append(error1 * 10)
+    #     theta = (np.linalg.inv(X.T @ X) @ X.T) @ y
+    #     x_test, y_test = gen_dataset(100000, regression_function_type)
+    #     error1 = 0
+    #     for i in range(100000):
+    #         y_pred = theta.T @ base_function(x_test[i], M, base_function_type)
+    #         error1 += (y_test[i] - y_pred) ** 2
+    #     error1 /= 100000
+    #     error1_list.append(error1 * 10)
 
 
 
