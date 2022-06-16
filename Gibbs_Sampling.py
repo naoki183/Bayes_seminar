@@ -4,6 +4,7 @@ from scipy.stats import wishart
 from scipy.stats import dirichlet
 import matplotlib.pyplot as plt
 import random
+import time
 
 # シード値
 random_state = 42
@@ -124,10 +125,6 @@ def Gibbs_sampling(X, iter):
             alpha_[k] = alpha_k
         pi = sample_pi(alpha_)
     
-    print(pi)
-    print(Lambda)
-    print(mu)
-    
     return [Lambda, mu, pi]
 
 def predict_distribution(M, Lambda, mu, pi):
@@ -145,10 +142,10 @@ def plot_points(pred_data):
     k1, k2, k3 = gen_dataset()
     fig = plt.figure(figsize=(12,8))
     ax = fig.add_subplot(111)
-    ax.scatter(k1[:, 0], k1[:, 1], label="クラスタ1", color="green")
-    ax.scatter(k2[:, 0], k2[:, 1], label="クラスタ2", color="blue")
-    ax.scatter(k3[:, 0], k3[:, 1], label="クラスタ3", color="grey")
-    ax.scatter(pred_data[:, 0], pred_data[:, 1], label="予測分布", color="red")
+    ax.scatter(k1[:, 0], k1[:, 1], label="cluster1", color="green")
+    ax.scatter(k2[:, 0], k2[:, 1], label="cluster2", color="blue")
+    ax.scatter(k3[:, 0], k3[:, 1], label="cluster3", color="grey")
+    ax.scatter(pred_data[:, 0], pred_data[:, 1], label="prediction", color="red")
     plt.legend()
     plt.show()
     return
@@ -159,7 +156,11 @@ def main():
     X = gen_train_data()
     iter = 100
     M = 3000
+    start_time = time.time()
     Lambda, mu, pi = Gibbs_sampling(X, iter)
+    end_time = time.time()
+    print(end_time - start_time)
+    print(pi)
     pred_data = predict_distribution(M, Lambda, mu, pi)
     plot_points(pred_data)
     return

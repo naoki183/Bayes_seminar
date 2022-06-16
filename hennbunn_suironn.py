@@ -4,6 +4,7 @@ from scipy.special import psi
 import matplotlib.pyplot as plt
 from scipy.stats import wishart
 from scipy.stats import dirichlet
+import time
 
 # データの次元数
 D = 2
@@ -137,7 +138,11 @@ def main():
     X = gen_train_data()
     # サンプリングの回数
     M = 3000
+    start_time = time.time()
     alpha_, beta_, nu_, W_, m_ = hennbunn_suironn(X)
+    end_time = time.time()
+    print(end_time - start_time)
+    print(alpha_)
     pred_data = np.zeros((M, D))
     for i in range(M):
         pi = dirichlet.rvs(alpha_, size=1)
